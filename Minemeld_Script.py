@@ -39,7 +39,6 @@ for ip in ipBanned:
         ipBanned.pop(index)
     index += 1
 
-
 #Descarrega de ip de minemeld
 import wget
 import ssl
@@ -60,7 +59,6 @@ wget.download(url, 'ipsMinemeld.txt')
 print ("Ips descarregades")
 
 
-
 #Carrega de les ip del minemeld
 with open('ipsMinemeld.txt') as fp:
    line = fp.readline() #primera linea de minemeld buida
@@ -76,6 +74,14 @@ with open('ipsMinemeld.txt') as fp:
             ipBanned.append([line.rstrip(' \n'),today.strftime("%d/%m/%Y"),timeBan])
        line = fp.readline()
        cnt += 1
+
+
+with open('ips.csv', 'w', newline='') as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=' ',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for ip in ipBanned:
+        spamwriter.writerow(ip)
+
 
 from os import remove
 remove('ipsMinemeld.txt')
