@@ -1,5 +1,5 @@
 import os
-os.chdir("C:\\Datos")
+os.chdir("./Datos")
 os.getcwd()
 import configparser
 
