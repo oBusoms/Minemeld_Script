@@ -1,4 +1,3 @@
-
 import os
 os.chdir("C:\\Datos")
 os.getcwd()
@@ -21,8 +20,9 @@ reader = csv.reader(f,  delimiter=',')
 ipBanned = []
 ipBanned_llista = []
 for row in reader:
-    ipBanned.append([row[0], row[1], row[2]])
-    ipBanned_llista.append(row[0])
+    if row:
+        ipBanned.append([row[0], row[1], row[2]])
+        ipBanned_llista.append(row[0])
 print ("Ips Carregades")
 
 #Eliminacio de ips caducades
@@ -58,3 +58,46 @@ url = "https://" + ipMinemeld + "/feeds/malcode5-Output-STIC"
 wget.download(url, 'ipsMinemeld.txt')
 
 print ("Ips descarregades")
+
+
+
+#Carrega de les ip del minemeld
+with open('ipsMinemeld.txt') as fp:
+   line = fp.readline() #primera linea de minemeld buida
+   line = fp.readline()
+   cnt = 1
+   while line:
+       
+       if line in ipBanned_llista:
+           findip = ipBanned_llista.index(line)
+
+           ipBanned[findip][1] = today.strftime("%d/%m/%Y")
+       else:
+            ipBanned.append([line.rstrip(' \n'),today.strftime("%d/%m/%Y"),timeBan])
+       line = fp.readline()
+       cnt += 1
+
+from os import remove
+remove('ipsMinemeld.txt')
+
+print ("Llista ips actualitzada")
+
+import paramiko
+
+connexio = paramiko.Transport(ipASR,22)
+connexio.connect(username = usuariASR, password = passASR)
+
+canal = connexio.open_session()
+canal.exec_command('enable')
+canal.exec_command('conf t')
+
+canal.exec_command('no access-list 100')
+for ip in ipBanned_llista:
+    comanda = "access-list 100 deny host " + ip
+    canal.exec_command(comanda)
+salida = canal.makefile('rb', -1).readlines()
+if salida:
+    print salida
+else:
+    print canal.makefile_stderr('rb', -1).readlines()
+connexio.close()
