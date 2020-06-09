@@ -103,7 +103,7 @@ for ip in ipBanned_llista:
     canal.exec_command(comanda)
 salida = canal.makefile('rb', -1).readlines()
 if salida:
-    print salida
+    print (salida)
 else:
-    print canal.makefile_stderr('rb', -1).readlines()
+    print (canal.makefile_stderr('rb', -1).readlines())
 connexio.close()
