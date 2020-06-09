@@ -77,7 +77,7 @@ with open('ipsMinemeld.txt') as fp:
 
 
 with open('ips.csv', 'w', newline='') as csvfile:
-    spamwriter = csv.writer(csvfile, delimiter=' ',
+    spamwriter = csv.writer(csvfile, delimiter=',',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for ip in ipBanned:
         spamwriter.writerow(ip)
