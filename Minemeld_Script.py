@@ -19,6 +19,7 @@ f= open("ips.csv")
 reader = csv.reader(f,  delimiter=',')
 ipBanned = []
 ipBanned_llista = []
+i = 0
 for row in reader:
     if row:
         ipBanned.append([row[0], row[1], row[2]])
@@ -33,6 +34,7 @@ def days_between(d1, d2):
     d2 = datetime.strptime(d2, "%d/%m/%Y")
     return abs((d2 - d1).days)
 today = date.today()
+
 index = 0 
 for ip in ipBanned:
     if days_between(today.strftime("%d/%m/%Y") ,ip[1]) > int(timeBan):
@@ -64,7 +66,8 @@ with open('ipsMinemeld.txt') as fp:
    line = fp.readline() #primera linea de minemeld buida
    line = fp.readline()
    cnt = 1
-   while line:
+   print ("Obront fitxer.")
+   while line and cnt < 100:
        
        if line in ipBanned_llista:
            findip = ipBanned_llista.index(line)
@@ -74,11 +77,13 @@ with open('ipsMinemeld.txt') as fp:
             ipBanned.append([line.rstrip(' \n'),today.strftime("%d/%m/%Y"),timeBan])
        line = fp.readline()
        cnt += 1
+       print (cnt)
 
 
-with open('ips.csv', 'w', newline='') as csvfile:
+with open('ips.csv', 'w') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    print("Escrivint ips..")
     for ip in ipBanned:
         spamwriter.writerow(ip)
 
@@ -89,7 +94,7 @@ remove('ipsMinemeld.txt')
 print ("Llista ips actualitzada")
 
 import paramiko
-
+print("Connectant..")
 connexio = paramiko.Transport(ipASR,22)
 connexio.connect(username = usuariASR, password = passASR)
 
